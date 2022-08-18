@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <input type="button" id="button" value="发送请求" onclick="getJSON()">
+    <p id="p"></p>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script>
+    function getJSON() {
+        $.post(
+            //一共有三个参数
+            //1.请求路径
+            "/community/alpha/json",
+            //2.向服务器发送参数 json格式
+            {"name":"Tom","age":18},
+            //3.回调函数，当服务器响应了数据，浏览器会调用这个回调函数，并传入服务器返回的数据
+            function(data) {
+                console.log(data);
+            }
+        );
+    }
+</script>
+</body>
+</html>

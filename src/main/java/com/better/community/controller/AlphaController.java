@@ -1,15 +1,17 @@
 package com.better.community.controller;
 
 import com.better.community.service.AlphaService;
-import javafx.print.Printer;
+import com.better.community.util.CommunityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -143,4 +145,63 @@ public class AlphaController {
 
         return emps;
     }
+
+    // 向客户端返回一个cookie
+    @GetMapping("/cookie/set")
+    @ResponseBody
+    public String setCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("cookieTest", "valueTest");
+        //设置cookie有效路径
+        cookie.setPath("/community/alpha");
+        //设置cookie有效时间(s)
+        cookie.setMaxAge(10 * 60);
+
+        response.addCookie(cookie);
+        return "set Cookie.";
+    }
+
+    //当用户访问了 /cookie/set 且服务器返回cookie之后，客户端再访问服务器且满足有效路径，
+    // 则下次访问浏览器会自动携带cookie（在请求头中），
+    // 可通过HttpServletRequest.getCookie或@CookieValue(String key)获取
+    @GetMapping("/cookie/get")
+    @ResponseBody
+    public String getCookie(@CookieValue("cookieTest") String cookie) {
+        System.out.println(cookie);
+        return "get Cookie: cookieTest = " + cookie;
+    }
+
+    // session：存放在服务器端。一般用户获取用户登录状态。
+    // session通过cookie携带sessionID来标识一台浏览器。
+    @GetMapping("/session/set")
+    @ResponseBody
+    //只要在Controller参数列表中声明HttpSession,SpringMVC会自动把SessionID放到cookie中返回。
+    public String setSession(HttpSession session) {
+        session.setAttribute("user", "admin");
+        session.setAttribute("password", "123456");
+
+        return "set Session";
+    }
+
+    @GetMapping("/session/get")
+    @ResponseBody
+    public String getSession(HttpSession session) {
+        String user = (String) session.getAttribute("user");
+        String password = (String) session.getAttribute("password");
+
+        return "user: " + user + ",password: " + password;
+    }
+
+    //测试json字符串
+    @PostMapping("/json")
+    @ResponseBody
+    public String getJSON(String name, int age) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        map.put("age", age);
+
+        System.out.println(map);
+
+        return CommunityUtil.getJSONString(0, "成功！", map);
+    }
+
 }

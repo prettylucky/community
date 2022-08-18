@@ -1,6 +1,7 @@
 package com.better.community;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,4 +27,5 @@ public class LoggerTest {
         logger.warn("warn msg");
         logger.error("error msg");
     }
+
 }

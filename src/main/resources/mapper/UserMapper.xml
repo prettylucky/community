@@ -26,7 +26,7 @@
         where email = #{email}
     </select>
     <!--keyProperty可以自动生成主键并填入-->
-    <insert id="insertUser" parameterType="user" keyProperty="id">
+    <insert id="insertUser" parameterType="user" keyProperty="id" useGeneratedKeys="true">
         insert into
             user(<include refid="insertFields"></include>)
         values(#{username}, #{password}, #{salt}, #{email}, #{type}, #{status}, #{activationCode}, #{headerUrl}, #{createTime})
@@ -44,4 +44,12 @@
     <update id="updatePassword">
         update user set password=#{password} where id = #{id}
     </update>
+
+    <select id="selectByTicket" resultType="user">
+        select u.id, u.username, u.password, u.salt, u.email, u.type, u.status, u.activation_code, u.header_url, u.create_time
+        from user u
+        join login_ticket t
+        on u.id = t.user_id
+        where ticket = #{ticket}
+    </select>
 </mapper>

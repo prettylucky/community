@@ -1,5 +1,6 @@
 package com.better.community.dao;
 
+import com.better.community.entity.LoginTicket;
 import com.better.community.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -27,5 +28,7 @@ public interface UserMapper {
     int updateStatus(int id, int status);
     int updateHeaderUrl(int id, String headerUrl);
     int updatePassword(int id, String password);
+
+    User selectByTicket(String ticket);
 
 }
